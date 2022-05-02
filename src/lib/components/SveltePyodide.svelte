@@ -1,25 +1,24 @@
-<script>
-	import { amp, browser, dev, mode, prerendering } from '$app/env';
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import type { runPython as rpType } from 'pyodide/api';
+	import { pyodide } from '$lib/store';
 
-	let runPython = undefined;
+	let pyodideAsync;
+	let runPython: typeof rpType | undefined = undefined;
+
 	let output = '';
 
 	let replCode = '';
 	let replOutput = '';
 
-	if (browser) {
-		const main = async () => {
-			const module = await import('pyodide/pyodide');
+	pyodide.subscribe(value => {
+		pyodideAsync =  value
+	})
 
-			const pyodide = await module.loadPyodide({
-				indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.20.0/full/'
-			});
-
-			runPython = pyodide.runPython;
-		};
-
-		main();
-	}
+	onMount(async () => {
+		const p = await pyodideAsync
+		runPython = p.runPython
+	})
 
 	$: {
 		if (runPython) {
