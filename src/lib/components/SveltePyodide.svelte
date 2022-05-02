@@ -12,7 +12,7 @@
 			const module = await import('pyodide/pyodide');
 
 			const pyodide = await module.loadPyodide({
-				indexURL: '/pyodide-cdn'
+				indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.20.0/full/'
 			});
 
 			runPython = pyodide.runPython;
